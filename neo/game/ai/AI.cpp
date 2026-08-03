@@ -34,6 +34,7 @@ If you have questions concerning this license or the applicable additional terms
 #include "SmokeParticles.h"
 
 #include "ai/AI.h"
+#include "d3doom3_star_integration.h"
 
 static const char *moveCommandString[ NUM_MOVE_COMMANDS ] = {
 	"MOVE_NONE",
@@ -3327,6 +3328,7 @@ void idAI::Killed( idEntity *inflictor, idEntity *attacker, int damage, const id
 		AI_DAMAGE = true;
 		return;
 	}
+	D3Doom3_STAR_OnMonsterKilled( GetEntityDefName(), 0 );
 
 	// stop all voice sounds
 	StopSound( SND_CHANNEL_VOICE, false );

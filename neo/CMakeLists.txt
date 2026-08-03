@@ -981,6 +981,7 @@ set(src_game
 	game/physics/Physics_Static.cpp
 	game/physics/Physics_StaticMulti.cpp
 	game/physics/Push.cpp
+	game/d3doom3_star_integration.cpp
 )
 
 add_globbed_headers(src_game "game")
@@ -1409,12 +1410,16 @@ if(BASE AND NOT HARDLINK_GAME)
 	set_target_properties(base PROPERTIES PREFIX "")
 	set_target_properties(base PROPERTIES COMPILE_DEFINITIONS "GAME_DLL")
 	target_include_directories(base PRIVATE "${CMAKE_SOURCE_DIR}/game")
+	target_compile_definitions(base PRIVATE OASIS_STAR_SYNC_IN_CLIENT=1)
 	set_target_properties(base PROPERTIES LINK_FLAGS "${ldflags}")
 	set_target_properties(base PROPERTIES INSTALL_NAME_DIR "@executable_path")
 	if (AROS)
 		target_link_libraries(base idlib dynmod)
 	else()
 		target_link_libraries(base idlib)
+		if(MSVC)
+			target_link_libraries(base "${CMAKE_SOURCE_DIR}/game/star_api.lib")
+		endif()
 	endif()
 
 	if(NOT APPLE AND NOT WIN32)

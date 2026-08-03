@@ -40,6 +40,7 @@ If you have questions concerning this license or the applicable additional terms
 #include "Camera.h"
 #include "Fx.h"
 #include "Misc.h"
+#include "d3doom3_star_integration.h"
 
 const int ASYNC_PLAYER_INV_AMMO_BITS = idMath::BitsForInteger( 999 );	// 9 bits to cover the range [0, 999]
 const int ASYNC_PLAYER_INV_CLIP_BITS = -7;								// -7 bits to cover the range [-1, 60]
@@ -3226,6 +3227,10 @@ bool idPlayer::GiveInventoryItem( idDict *item ) {
 		return false;
 	}
 	inventory.items.Append( new idDict( *item ) );
+	D3Doom3_STAR_OnItemPickup(
+		item->GetString( "inv_name" ),
+		item->GetString( "classname" ),
+		item->GetBool( "inv_carry" ) ? 1 : 0 );
 	idItemInfo info;
 	const char* itemName = item->GetString( "inv_name" );
 	if ( idStr::Cmpn( itemName, STRTABLE_ID, STRTABLE_ID_LENGTH ) == 0 ) {

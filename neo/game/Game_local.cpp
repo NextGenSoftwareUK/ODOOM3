@@ -50,6 +50,7 @@ If you have questions concerning this license or the applicable additional terms
 #include "framework/Licensee.h" // DG: for ID__DATE__
 
 #include "Game_local.h"
+#include "d3doom3_star_integration.h"
 
 #ifndef GAME_DLL
 #include "tools/compilers/aas/AASFileManager.h"
@@ -367,6 +368,7 @@ void idGameLocal::Init( void ) {
 	common->GetAdditionalFunction(idCommon::FT_IsDemo, (idCommon::FunctionPointer*)&isDemoFnPtr, NULL);
 	//debugger support
 	common->GetAdditionalFunction(idCommon::FT_UpdateDebugger,(idCommon::FunctionPointer*) &updateDebuggerFnPtr,NULL);
+	D3Doom3_STAR_Init();
 }
 
 /*
@@ -381,6 +383,7 @@ void idGameLocal::Shutdown( void ) {
 	if ( !common ) {
 		return;
 	}
+	D3Doom3_STAR_Cleanup();
 
 	Printf( "----- Game Shutdown -----\n" );
 
@@ -2261,6 +2264,7 @@ gameReturn_t idGameLocal::RunFrame( const usercmd_t *clientCmds ) {
 #endif
 
 	player = GetLocalPlayer();
+	D3Doom3_STAR_Tick();
 
 	if ( !isMultiplayer && g_stopTime.GetBool() ) {
 		// clear any debug lines from a previous frame
@@ -3596,6 +3600,7 @@ bool idGameLocal::RequirementMet( idEntity *activator, const idStr &requires, in
 				}
 				return true;
 			} else {
+				if ( D3Doom3_STAR_CheckDoorAccess( requires.c_str() ) ) { return true; }
 				return false;
 			}
 		}
